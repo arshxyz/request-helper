@@ -1,48 +1,111 @@
-import { Container, Typography, OutlinedInput, Grid, makeStyles, Button, Icon } from "@material-ui/core";
-import SendIcon from '@material-ui/icons/Send';
-import { useState } from "react";
+import {
+  Container,
+  Typography,
+  Grid,
+  Button,
+  TextField,
+  makeStyles,
+} from "@material-ui/core";
+import { Autocomplete } from "@material-ui/lab";
+import SendIcon from "@material-ui/icons/Send";
+import CopyIcon from "@material-ui/icons/FileCopy";
+import { useEffect, useState } from "react";
+import { InputGenerator } from "./InputGenerator";
+import curlconvert from "../../scripts/curconvertArg";
 
 const useStyles = makeStyles((theme) => ({
-    curlInput: {
-        height: "20rem",
-    },
-    sendBtnCtr: {
-        padding: `1rem 0`,
-    },
-    sendBtn: {
-        margin: theme.spacing(1),
-    }
-  
-}));
+  dropdown: {
+    width: "12rem",
+  }
+}))
 
 export const CurlInput = (props) => {
-    const classes = useStyles();
-    const [curl, setCurl] = useState("");
-    return (
-        <Container >
-        <Grid container  spacing={4} justify="center">
-          <Grid item xs={"12"}>
-        <Typography align={"center"} variant={"h3"} gutterBottom>
- 
-          Curl2Shit
-        </Typography>
-          </Grid>
-          <Grid item xs={"12"} md={"6"} >
-        <OutlinedInput fullWidth multiline rows={10} value={curl} onChange={(e) => {setCurl(e.value)}}>
-        </OutlinedInput>
-        <Grid container xs={12} item justify="flex-end" className={classes.sendBtnCtr}>
-              <Button 
-              variant="contained" 
-              color="primary" 
-              endIcon={<SendIcon />}
-              >
-                  Start
-                  </Button>
+  const options = Object.keys(curlconvert)
+  const classes = useStyles();
+  const [state, setState] = useState({curl: "", result: "", convertTo: null})
+  const [syntaxError, setSyntaxError] = useState(false);
+  const [selectEmpty, setSelectEmpty] = useState(false);
+  const convert = () => {
+    if (!state.curl) {setSyntaxError(true); return} else setSyntaxError(false);
+    if (!state.convertTo) {setSelectEmpty(true); return;} else setSelectEmpty(false);
+    try {
+      setState((prevState) => ({...prevState, result: curlconvert[state.convertTo].method(state.curl)}));
+      setSyntaxError(false);
+    } catch (error) {
+      // console.log("Errror1")
+      setSyntaxError(true);
+    }
+  };
+  const textSettings = {
+    readOnly: true,
+    label: "API Syntax",
+    value: state.result,
+    onChange: (e) => {
+      setState((prevState) => ({...prevState, curl: e.target.value}));
+    },
+  };
+  const CopyBtn = (
+    <Button
+      variant="contained"
+      color="primary"
+      endIcon={<CopyIcon />}
+      disabled={!state.result}
+      onClick={() => {
+        navigator.clipboard.writeText(state.result);
+      }}
+    >
+      Copy
+    </Button>
+  );
+  const ConvertBtn = (
+    <Button
+      variant="contained"
+      color="primary"
+      endIcon={<SendIcon />}
+      onClick={convert}
+    >
+      Convert
+    </Button>
+  );
 
-        </Grid>
-          </Grid>
+  const dropDown = (
+    <Autocomplete 
+      value={state.convertTo}
+      onChange={(e, value) => {setState((prevState) => ({...prevState, convertTo:value}))}}
+      className={classes.dropdown}
+      options={options}
+      getOptionLabel={(option) => curlconvert[option].title}
+      renderInput={(params)=> <TextField {...params} label="Convert to" variant="outlined" size="small" fullWidth error={selectEmpty} />  }
+    />
+  )
 
+
+  return (
+    <Container>
+      <Grid container spacing={4} justify="center">
+        <Grid item xs={"12"}>
+          <Typography align={"center"} variant={"h3"} gutterBottom>
+            cURLtoPython
+          </Typography>
         </Grid>
-      </Container>
-    )
-}
+        <Grid container item spacing={2}>
+          <InputGenerator
+            inputProps={{
+              value: state.curl,
+              onChange: (e) => {
+                setState((prevState) => ({...prevState, curl: e.target.value}));
+              },
+              label: "cURL Syntax",
+              error: syntaxError,
+            }}
+            Btns={[dropDown,ConvertBtn]}
+          />
+          <InputGenerator
+            inputProps={{...textSettings, disabled:!state.result}}
+            Btns={[CopyBtn]}
+          />
+        </Grid>
+      </Grid>
+    </Container>
+  );
+};
