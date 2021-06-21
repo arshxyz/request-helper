@@ -20,8 +20,11 @@ export const InputGenerator = (props) => {
         variant={"outlined"}
       />
       <Grid container xs={12} item justify="flex-end" alignItems="center">
-        {props.Btns.map((item) => (
-          <span className={classes.sendBtn}> {item} </span>
+        {props.Btns.map((item, index) => (
+          <span key={index} className={classes.sendBtn}>
+            {" "}
+            {item}{" "}
+          </span>
         ))}
       </Grid>
     </Grid>

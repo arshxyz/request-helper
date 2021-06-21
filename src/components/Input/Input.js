@@ -1,11 +1,9 @@
 import {
   Container,
-  Typography,
   Grid,
   Button,
   TextField,
   makeStyles,
-  Paper,
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import SendIcon from "@material-ui/icons/Send";
@@ -14,6 +12,7 @@ import { useState } from "react";
 import { InputGenerator } from "./InputGenerator";
 import curlconvert from "../../scripts/curconvertArg";
 import { toast } from "react-toastify";
+import ButtonAppBar from "../Navbar/Navbar";
 
 const useStyles = makeStyles((theme) => ({
   dropdown: {
@@ -31,6 +30,7 @@ export const CurlInput = (props) => {
   });
   const [syntaxError, setSyntaxError] = useState(false);
   const [selectEmpty, setSelectEmpty] = useState(false);
+
   const convert = () => {
     if (!state.convertTo) {
       setSelectEmpty(true);
@@ -49,11 +49,21 @@ export const CurlInput = (props) => {
       setSyntaxError(true);
     }
   };
+
+  const handleInputChange = (e) => {
+    setState((prevState) => ({
+      ...prevState,
+      curl: e.target.value,
+    }));
+  };
+
+  const handleDropdownChange = (e, value) => {
+    setState((prevState) => ({ ...prevState, convertTo: value }));
+  };
+
   const textSettings = {
     readOnly: true,
-    label: `${
-      state.convertTo ? curlconvert[state.convertTo].title : "API"
-    } Syntax`,
+    label: `${curlconvert[state.convertTo].title} Syntax`,
     value: state.result,
     onChange: (e) => {
       setState((prevState) => ({ ...prevState, curl: e.target.value }));
@@ -88,9 +98,7 @@ export const CurlInput = (props) => {
       disableClearable
       value={state.convertTo}
       autoHighlight
-      onChange={(e, value) => {
-        setState((prevState) => ({ ...prevState, convertTo: value }));
-      }}
+      onChange={handleDropdownChange}
       className={classes.dropdown}
       options={options}
       getOptionLabel={(option) => curlconvert[option].title}
@@ -108,29 +116,27 @@ export const CurlInput = (props) => {
   );
 
   return (
-    <Container>
-      <Grid container spacing={4} justify="center">
-        <Grid container item spacing={2}>
-          <InputGenerator
-            inputProps={{
-              value: state.curl,
-              onChange: (e) => {
-                setState((prevState) => ({
-                  ...prevState,
-                  curl: e.target.value,
-                }));
-              },
-              label: "cURL Syntax",
-              error: syntaxError,
-            }}
-            Btns={[dropDown, ConvertBtn]}
-          />
-          <InputGenerator
-            inputProps={{ ...textSettings, disabled: !state.result }}
-            Btns={[CopyBtn]}
-          />
+    <div>
+      <ButtonAppBar curlState={state} />
+      <Container>
+        <Grid container spacing={4} justify="center">
+          <Grid container item spacing={2}>
+            <InputGenerator
+              inputProps={{
+                value: state.curl,
+                onChange: handleInputChange,
+                label: "cURL Syntax",
+                error: syntaxError,
+              }}
+              Btns={[dropDown, ConvertBtn]}
+            />
+            <InputGenerator
+              inputProps={{ ...textSettings, disabled: !state.result }}
+              Btns={[CopyBtn]}
+            />
+          </Grid>
         </Grid>
-      </Grid>
-    </Container>
+      </Container>
+    </div>
   );
 };

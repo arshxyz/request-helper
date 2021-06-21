@@ -3,17 +3,14 @@ import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
-import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import Hidden from "@material-ui/core/Hidden";
-import Drawer from "@material-ui/core/Drawer";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListItemText from "@material-ui/core/ListItemText";
 import ShareIcon from "@material-ui/icons/Share";
 import AssignmentIcon from "@material-ui/icons/Assignment";
+import { MobileDrawer } from "./MobileDrawer";
+import { DesktopMenuItems } from "./DesktopNavItems";
+import TransitionsModal from "../Modal/MainModal";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -22,6 +19,9 @@ const useStyles = makeStyles((theme) => ({
   },
   menuButton: {
     margin: theme.spacing(0, 2, 0, 0),
+  },
+  rightButton: {
+    margin: theme.spacing(0, 0, 0, 2),
   },
   title: {
     flexGrow: 1,
@@ -32,58 +32,39 @@ const useStyles = makeStyles((theme) => ({
       display: "block",
     },
   },
-  fullList: {
-    width: "250px",
-  },
 }));
 
-const menuItems = [
-  { title: "Share Request", action: "test", icon: <ShareIcon /> },
-  { title: "My Requests", action: "test", icon: <AssignmentIcon /> },
-];
-
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ curlState }) {
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [saveModal, setSaveModal] = useState(false);
+  const [modalType, setModalType] = useState("share");
   const classes = useStyles();
-
-  const desktopMenuItems = (
-    <div className={classes.desktopMenuItems}>
-      {menuItems.map((item) => (
-        <Button
-          variant="contained"
-          className={classes.menuButton}
-          key={item.title}
-          endIcon={item.icon}
-        >
-          {item.title}
-        </Button>
-      ))}
-    </div>
-  );
-
-  const mobileDrawer = (
-    <Drawer
-      open={drawerOpen}
-      onClose={() => {
+  const menuItems = [
+    {
+      title: "Share Request",
+      action: () => {
+        setSaveModal(true);
         setDrawerOpen(false);
-      }}
-      className={classes.fullList}
-    >
-      <div className={classes.fullList}>
-        <List>
-          {menuItems.map((item) => (
-            <ListItem button key={item}>
-              <ListItemIcon>{item.icon}</ListItemIcon>
-              <ListItemText primary={item.title} />
-            </ListItem>
-          ))}
-        </List>
-      </div>
-    </Drawer>
-  );
+        setModalType("share");
+      },
+      icon: <ShareIcon />,
+    },
+    {
+      title: "About",
+      action: () => {
+        setSaveModal(true);
+        setDrawerOpen(false);
+        setModalType("about");
+      },
+      icon: <AssignmentIcon />,
+    },
+  ];
 
   return (
     <div className={classes.root}>
+      <TransitionsModal
+        {...{ saveModal, setSaveModal, modalType, curlState }}
+      />
       <AppBar position="static">
         <Toolbar>
           <Hidden mdUp>
@@ -91,7 +72,6 @@ export default function ButtonAppBar() {
               edge="start"
               className={classes.menuButton}
               color="inherit"
-              aria-label="menu"
               onClick={() => {
                 setDrawerOpen(true);
               }}
@@ -102,15 +82,14 @@ export default function ButtonAppBar() {
           <Typography variant="h6" className={classes.title}>
             cURLBin
           </Typography>
-          {mobileDrawer}
-          {desktopMenuItems}
-          <Button
-            color="inherit"
-            variant="outlined"
-            className={classes.menuButton}
-          >
-            Login
-          </Button>
+          <MobileDrawer
+            {...{ menuItems }}
+            open={drawerOpen}
+            onClose={() => {
+              setDrawerOpen(false);
+            }}
+          />
+          <DesktopMenuItems {...{ menuItems }} />
         </Toolbar>
       </AppBar>
     </div>
