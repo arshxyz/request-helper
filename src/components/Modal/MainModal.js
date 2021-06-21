@@ -4,6 +4,7 @@ import Modal from "@material-ui/core/Modal";
 import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import SaveRequest from "../SaveRequest";
+import About from "../About";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -44,7 +45,8 @@ export default function TransitionsModal({
     >
       <Fade in={saveModal}>
         <div className={classes.paper}>
-          <SaveRequest {...{ curlState }} />
+          {modalType === "share" ? <SaveRequest {...{ curlState }} /> : null}
+          {modalType === "about" ? <About /> : null}
         </div>
       </Fade>
     </Modal>

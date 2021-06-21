@@ -3,11 +3,12 @@ import { CurlInput } from "./components/Input/Input";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Bounce } from "react-toastify";
-
+import {BrowserRouter as Router} from "react-router-dom"
 
 function App() {
 
   return (
+    <Router>
     <CssBaseline>
       <CurlInput />
       <ToastContainer
@@ -19,6 +20,7 @@ function App() {
         position={"bottom-center"}
       />
     </CssBaseline>
+    </Router>
   );
 }
 

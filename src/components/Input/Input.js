@@ -13,6 +13,7 @@ import { InputGenerator } from "./InputGenerator";
 import curlconvert from "../../scripts/curconvertArg";
 import { toast } from "react-toastify";
 import ButtonAppBar from "../Navbar/Navbar";
+import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   dropdown: {
@@ -122,6 +123,8 @@ export const CurlInput = (props) => {
     <div>
       <ButtonAppBar curlState={state} />
       <Container>
+        <Switch>
+          <Route exact path="/">
         <Grid container spacing={4} justify="center">
           <Grid container item spacing={2}>
             <InputGenerator
@@ -137,8 +140,11 @@ export const CurlInput = (props) => {
               inputProps={{ ...textSettings, disabled: !state.result }}
               Btns={[CopyBtn]}
             />
+
           </Grid>
         </Grid>
+        </Route>
+        </Switch>
       </Container>
     </div>
   );
