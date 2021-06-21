@@ -11,6 +11,7 @@ import AssignmentIcon from "@material-ui/icons/Assignment";
 import { MobileDrawer } from "./MobileDrawer";
 import { DesktopMenuItems } from "./DesktopNavItems";
 import TransitionsModal from "../Modal/MainModal";
+import { toast } from "react-toastify";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -43,9 +44,15 @@ export default function ButtonAppBar({ curlState }) {
     {
       title: "Share Request",
       action: () => {
-        setSaveModal(true);
+        if(!curlState.result) {
+          toast.error("Convert a valid request to share!");
+          return;
+        }
         setDrawerOpen(false);
         setModalType("share");
+        setSaveModal(true);
+
+
       },
       icon: <ShareIcon />,
     },

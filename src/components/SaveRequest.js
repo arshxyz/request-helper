@@ -1,6 +1,20 @@
 import { Grid, TextField, Button } from "@material-ui/core";
 import { Hidden } from "@material-ui/core";
 import { makeStyles, Typography } from "@material-ui/core";
+import { useState } from "react";
+const { customAlphabet } = require('nanoid');
+const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+const nanoid = customAlphabet(alphabet, 9);
+function generateLink() {
+  let id = nanoid();
+  let res = "";
+  for (let i = 0; i < 9; i+=3){
+    res = res + id.substr(i, 3) + "-";
+  }
+  res = "https://curl2api.netlify.app/" + res;
+  return res.slice(0,-1);
+} 
+
 const useStyles = makeStyles((theme) => ({
   heading: {
     borderBottom: "1px solid lightgray",
@@ -21,37 +35,44 @@ const useStyles = makeStyles((theme) => ({
     color: "#6e6e6e",
     display: "flex",
     flexDirection: "column",
-    // margin: theme.spacing(1, 0)
     padding: theme.spacing(2, 0, 0, 0),
-    // "& div": {
-    //     // margin:theme.spacing(2, 0, 1, 0)
-    // }
+    "& div": {
+      margin: theme.spacing(1, 0)
+    }
+  },
+  shareConfirm: {
+    padding: theme.spacing(1, 0)
   },
   flexGrow: {
     flexGrow: "1",
   },
   submitBtn: {
+    marginTop: "1rem",
     [theme.breakpoints.down("md")]: {
       marginTop: "2rem",
     },
   },
+  input: {
+    height: "200px",
+    display: "none",
+  }
 }));
 
 export default function SaveRequest({ curlState }) {
+  const [link, setLink] = useState(generateLink())
   const classes = useStyles();
+  const [linkShared, setLinkShared] = useState(false);
   return (
     <div>
       <Typography variant="h5" className={classes.heading}>
-        {" "}
-        Share request{" "}
+        Share request
       </Typography>
 
       <div className={classes.modalContent}>
         <Typography className={classes.confirmText}>
-          {" "}
-          Share this request?{" "}
+          Share this request?
         </Typography>
-        <Grid container justify="space-evenly">
+        <Grid container justify="space-evenly" className={classes.shareConfirm}>
           <Grid item md={6} container className={classes.content}>
             <div>
               A public URL will be created. You can use this link to share your
@@ -63,6 +84,7 @@ export default function SaveRequest({ curlState }) {
               private cookies/auth tokens.
             </div>
             <div className={classes.flexGrow} />
+            <TextField variant="outlined" fullWidth value={link}/>
             <Button
               variant="contained"
               color="primary"
@@ -71,20 +93,37 @@ export default function SaveRequest({ curlState }) {
             >
               Share Link
             </Button>
+            <Button
+              variant="contained"
+              color="primary"
+              size="large"
+              className={classes.submitBtn}
+              disabled
+            >
+              Copy
+            </Button>
           </Grid>
           <Hidden smDown>
             <Grid item container md={6} justify={"center"}>
               <TextField
                 variant="outlined"
                 multiline
-                rows={8}
-                inputProps={{ readOnly: true }}
-                style={{ width: "90%" }}
+                rows={20}
+                inputProps={{ readOnly: true,}}
+                style={{ width: "90%"}}
                 defaultValue={curlState.result}
               />
             </Grid>
           </Hidden>
         </Grid>
+          {/* <Grid item container justify="flex-start" xs={12}>
+            <div>
+        <Typography className={classes.confirmText}>
+          Share this request?
+        </Typography>
+              test
+            </div>
+          </Grid> */}
       </div>
     </div>
   );

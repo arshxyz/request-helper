@@ -22,8 +22,7 @@ export const InputGenerator = (props) => {
       <Grid container xs={12} item justify="flex-end" alignItems="center">
         {props.Btns.map((item, index) => (
           <span key={index} className={classes.sendBtn}>
-            {" "}
-            {item}{" "}
+            {item}
           </span>
         ))}
       </Grid>
