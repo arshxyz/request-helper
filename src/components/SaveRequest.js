@@ -83,7 +83,7 @@ export default function SaveRequest({ curlState }) {
   }
 
   const copyLink = () => {
-    navigator.clipboard.writeText(curlState.result);
+    navigator.clipboard.writeText(window.location + link);
     setCopied(true);
   }
 
@@ -131,7 +131,7 @@ export default function SaveRequest({ curlState }) {
               disabled={!linkShared}
               onClick={copyLink}
             >
-              {copied ? <span>Copied to clipboard</span> : <span>Copy</span>}
+              {copied ? <span>Copied to clipboard</span> : <span>Copy link</span>}
             </Button>
           </Grid>
           <Hidden smDown>
