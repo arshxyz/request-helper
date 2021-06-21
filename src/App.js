@@ -2,9 +2,11 @@ import { CssBaseline } from "@material-ui/core";
 import { CurlInput } from "./components/Input/Input";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Flip } from "react-toastify";
+import { Bounce } from "react-toastify";
+
 
 function App() {
+
   return (
     <CssBaseline>
       <CurlInput />
@@ -13,7 +15,7 @@ function App() {
         hideProgressBar
         pauseOnFocusLoss={false}
         autoClose={2000}
-        transition={Flip}
+        transition={Bounce}
         position={"bottom-center"}
       />
     </CssBaseline>

@@ -1,7 +1,11 @@
 import { Grid, TextField, Button } from "@material-ui/core";
+import DoneIcon from '@material-ui/icons/Done';
 import { Hidden } from "@material-ui/core";
 import { makeStyles, Typography } from "@material-ui/core";
 import { useState } from "react";
+import { toast } from "react-toastify";
+import { db } from "../firebase";
+
 const { customAlphabet } = require('nanoid');
 const alphabet = 'abcdefghijklmnopqrstuvwxyz';
 const nanoid = customAlphabet(alphabet, 9);
@@ -11,7 +15,6 @@ function generateLink() {
   for (let i = 0; i < 9; i+=3){
     res = res + id.substr(i, 3) + "-";
   }
-  res = "https://curl2api.netlify.app/" + res;
   return res.slice(0,-1);
 } 
 
@@ -62,6 +65,29 @@ export default function SaveRequest({ curlState }) {
   const [link, setLink] = useState(generateLink())
   const classes = useStyles();
   const [linkShared, setLinkShared] = useState(false);
+  const [copied, setCopied] = useState(false);
+  const shareLink = async() => {
+    if (linkShared) {
+      toast.success("Code already published");
+      return;
+    }
+    const linkRef = await db.collection("requests").doc(link)
+    linkRef.set(curlState)
+    .then(() => {
+      toast.success("Code published!");
+      setLinkShared(true);
+    })
+    .catch((e) => toast.error(e))
+
+
+  }
+
+  const copyLink = () => {
+    navigator.clipboard.writeText(curlState.result);
+    setCopied(true);
+  }
+
+
   return (
     <div>
       <Typography variant="h5" className={classes.heading}>
@@ -87,12 +113,13 @@ export default function SaveRequest({ curlState }) {
               Click the generated link to generate a different one
             </div>
             <div className={classes.flexGrow} />
-            <TextField variant="outlined" fullWidth value={link} inputProps={{readOnly: true}} onClick={() => {setLink(generateLink())}} />
+            <TextField variant="outlined" fullWidth value={window.location + link} inputProps={{readOnly: true}} onClick={() => {setLink(generateLink())}} />
             <Button
               variant="contained"
               color="primary"
               size="large"
               className={classes.submitBtn}
+              onClick={shareLink}
             >
               Share Link
             </Button>
@@ -101,9 +128,10 @@ export default function SaveRequest({ curlState }) {
               color="primary"
               size="large"
               className={classes.submitBtn}
-              disabled
+              disabled={!linkShared}
+              onClick={copyLink}
             >
-              Copy
+              {copied ? <span>Copied to clipboard</span> : <span>Copy</span>}
             </Button>
           </Grid>
           <Hidden smDown>
@@ -114,19 +142,11 @@ export default function SaveRequest({ curlState }) {
                 rows={20}
                 inputProps={{ readOnly: true,}}
                 style={{ width: "90%"}}
-                defaultValue={curlState.result}
+                value={curlState.result}
               />
             </Grid>
           </Hidden>
         </Grid>
-          {/* <Grid item container justify="flex-start" xs={12}>
-            <div>
-        <Typography className={classes.confirmText}>
-          Share this request?
-        </Typography>
-              test
-            </div>
-          </Grid> */}
       </div>
     </div>
   );
