@@ -82,9 +82,12 @@ export default function SaveRequest({ curlState }) {
               <br />
               Ensure that your request does not include any personal info or
               private cookies/auth tokens.
+              <br />
+              <br />
+              Click the generated link to generate a different one
             </div>
             <div className={classes.flexGrow} />
-            <TextField variant="outlined" fullWidth value={link}/>
+            <TextField variant="outlined" fullWidth value={link} inputProps={{readOnly: true}} onClick={() => {setLink(generateLink())}} />
             <Button
               variant="contained"
               color="primary"

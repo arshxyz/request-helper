@@ -20,6 +20,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const examplecurl = "curl -d \"param1=value1&param2=value2\" -H \"Content-Type: application\/x-www-form-urlencoded\" -X POST https:\/\/example.com\/example-api"
+
 export const CurlInput = (props) => {
   const options = Object.keys(curlconvert);
   const classes = useStyles();
@@ -37,7 +39,7 @@ export const CurlInput = (props) => {
       return;
     } else setSelectEmpty(false);
     if (!state.curl) {
-      setSyntaxError(true);
+      setState((prevState) => ({...prevState, curl: examplecurl}))
       return;
     } else setSyntaxError(false);
     try {
@@ -77,6 +79,7 @@ export const CurlInput = (props) => {
       disabled={!state.result}
       onClick={() => {
         navigator.clipboard.writeText(state.result);
+        toast.success("Copied!");
       }}
     >
       Copy
