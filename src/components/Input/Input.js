@@ -7,21 +7,22 @@ import {
 } from "@material-ui/core";
 import { Autocomplete } from "@material-ui/lab";
 import SendIcon from "@material-ui/icons/Send";
-import CopyIcon from "@material-ui/icons/FileCopy";
 import { useState } from "react";
 import { InputGenerator } from "./InputGenerator";
 import curlconvert from "../../scripts/curconvertArg";
 import { toast } from "react-toastify";
 import ButtonAppBar from "../Navbar/Navbar";
-import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
+import { Switch, Route } from "react-router-dom";
+import { ViewRequest } from "../ViewRequest/ViewRequest";
+import { NoMatch } from "../ViewRequest/NoMatch";
+import CopyBtn from "../Buttons/CopyBtn";
+import examplecurl from "./exampleCurl";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   dropdown: {
     width: "12rem",
   },
 }));
-
-const examplecurl = "curl -d \"param1=value1&param2=value2\" -H \"Content-Type: application\/x-www-form-urlencoded\" -X POST https:\/\/example.com\/example-api"
 
 export const CurlInput = (props) => {
   const options = Object.keys(curlconvert);
@@ -40,7 +41,7 @@ export const CurlInput = (props) => {
       return;
     } else setSelectEmpty(false);
     if (!state.curl) {
-      setState((prevState) => ({...prevState, curl: examplecurl}))
+      setState((prevState) => ({ ...prevState, curl: examplecurl }));
       return;
     } else setSyntaxError(false);
     try {
@@ -72,20 +73,20 @@ export const CurlInput = (props) => {
       setState((prevState) => ({ ...prevState, curl: e.target.value }));
     },
   };
-  const CopyBtn = (
-    <Button
-      variant="contained"
-      color="primary"
-      endIcon={<CopyIcon />}
-      disabled={!state.result}
-      onClick={() => {
-        navigator.clipboard.writeText(state.result);
-        toast.success("Copied!");
-      }}
-    >
-      Copy
-    </Button>
-  );
+  // const CopyBtn = (
+  //   <Button
+  //     variant="contained"
+  //     color="primary"
+  //     endIcon={<CopyIcon />}
+  //     disabled={!state.result}
+  //     onClick={() => {
+  //       navigator.clipboard.writeText(state.result);
+  //       toast.success("Copied!");
+  //     }}
+  //   >
+  //     Copy
+  //   </Button>
+  // );
   const ConvertBtn = (
     <Button
       variant="contained"
@@ -125,25 +126,35 @@ export const CurlInput = (props) => {
       <Container>
         <Switch>
           <Route exact path="/">
-        <Grid container spacing={4} justify="center">
-          <Grid container item spacing={2}>
-            <InputGenerator
-              inputProps={{
-                value: state.curl,
-                onChange: handleInputChange,
-                label: "cURL Syntax",
-                error: syntaxError,
-              }}
-              Btns={[dropDown, ConvertBtn]}
-            />
-            <InputGenerator
-              inputProps={{ ...textSettings, disabled: !state.result }}
-              Btns={[CopyBtn]}
-            />
-
-          </Grid>
-        </Grid>
-        </Route>
+            <Grid container spacing={4} justify="center">
+              <Grid container item spacing={2}>
+                <InputGenerator
+                  inputProps={{
+                    value: state.curl,
+                    onChange: handleInputChange,
+                    label: "cURL Syntax",
+                    error: syntaxError,
+                  }}
+                  Btns={[dropDown, ConvertBtn]}
+                />
+                <InputGenerator
+                  inputProps={{ ...textSettings, disabled: !state.result }}
+                  Btns={[<CopyBtn copyText={state.result} />]}
+                />
+              </Grid>
+            </Grid>
+          </Route>
+          <Route
+            path="/:id([a-z]{3}-[a-z]{3}-[a-z]{3})"
+            render={({ match }) => (
+              <div>
+                <ViewRequest id={match.params.id} />
+              </div>
+            )}
+          />
+          <Route path="*">
+            <NoMatch />
+          </Route>
         </Switch>
       </Container>
     </div>

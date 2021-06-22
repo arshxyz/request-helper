@@ -12,8 +12,7 @@ import { MobileDrawer } from "./MobileDrawer";
 import { DesktopMenuItems } from "./DesktopNavItems";
 import TransitionsModal from "../Modal/MainModal";
 import { toast } from "react-toastify";
-import { useLocation, Switch, Route, Link } from "react-router-dom";
-
+import { useLocation, Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -28,7 +27,6 @@ const useStyles = makeStyles((theme) => ({
   },
   title: {
     flexGrow: 1,
-
   },
   desktopMenuItems: {
     display: "none",
@@ -48,15 +46,13 @@ export default function ButtonAppBar({ curlState }) {
     {
       title: "Share Request",
       action: () => {
-        if(!curlState.result) {
+        if (!curlState.result) {
           toast.error("Convert a valid request to share!");
           return;
         }
         setDrawerOpen(false);
         setModalType("share");
         setSaveModal(true);
-
-
       },
       icon: <ShareIcon />,
     },
@@ -71,7 +67,7 @@ export default function ButtonAppBar({ curlState }) {
     },
   ];
 
-  const menuItems = loc.pathname == "/" ? AllMenuItems : [AllMenuItems[1]]
+  const menuItems = loc.pathname === "/" ? AllMenuItems : [AllMenuItems[1]];
 
   return (
     <div className={classes.root}>
@@ -93,7 +89,10 @@ export default function ButtonAppBar({ curlState }) {
             </IconButton>
           </Hidden>
           <Typography variant="h6" className={classes.title}>
-          <Link to="/" style={{color:"white"}}> cURLBin </Link>
+            <Link to="/" style={{ color: "white" }}>
+              {" "}
+              cURLBin{" "}
+            </Link>
           </Typography>
           <MobileDrawer
             {...{ menuItems }}

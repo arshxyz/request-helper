@@ -1,22 +1,21 @@
 import { Grid, TextField, Button } from "@material-ui/core";
-import DoneIcon from '@material-ui/icons/Done';
 import { Hidden } from "@material-ui/core";
 import { makeStyles, Typography } from "@material-ui/core";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import { db } from "../firebase";
 
-const { customAlphabet } = require('nanoid');
-const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+const { customAlphabet } = require("nanoid");
+const alphabet = "abcdefghijklmnopqrstuvwxyz";
 const nanoid = customAlphabet(alphabet, 9);
 function generateLink() {
   let id = nanoid();
   let res = "";
-  for (let i = 0; i < 9; i+=3){
+  for (let i = 0; i < 9; i += 3) {
     res = res + id.substr(i, 3) + "-";
   }
-  return res.slice(0,-1);
-} 
+  return res.slice(0, -1);
+}
 
 const useStyles = makeStyles((theme) => ({
   heading: {
@@ -40,11 +39,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     padding: theme.spacing(2, 0, 0, 0),
     "& div": {
-      margin: theme.spacing(1, 0)
-    }
+      margin: theme.spacing(1, 0),
+    },
   },
   shareConfirm: {
-    padding: theme.spacing(1, 0)
+    padding: theme.spacing(1, 0),
   },
   flexGrow: {
     flexGrow: "1",
@@ -58,35 +57,33 @@ const useStyles = makeStyles((theme) => ({
   input: {
     height: "200px",
     display: "none",
-  }
+  },
 }));
 
 export default function SaveRequest({ curlState }) {
-  const [link, setLink] = useState(generateLink())
+  const [link, setLink] = useState(generateLink());
   const classes = useStyles();
   const [linkShared, setLinkShared] = useState(false);
   const [copied, setCopied] = useState(false);
-  const shareLink = async() => {
+  const shareLink = async () => {
     if (linkShared) {
       toast.success("Code already published");
       return;
     }
-    const linkRef = await db.collection("requests").doc(link)
-    linkRef.set(curlState)
-    .then(() => {
-      toast.success("Code published!");
-      setLinkShared(true);
-    })
-    .catch((e) => toast.error(e))
-
-
-  }
+    const linkRef = await db.collection("requests").doc(link);
+    linkRef
+      .set(curlState)
+      .then(() => {
+        toast.success("Code published!");
+        setLinkShared(true);
+      })
+      .catch((e) => toast.error(e));
+  };
 
   const copyLink = () => {
     navigator.clipboard.writeText(window.location + link);
     setCopied(true);
-  }
-
+  };
 
   return (
     <div>
@@ -113,7 +110,15 @@ export default function SaveRequest({ curlState }) {
               Click the generated link to generate a different one
             </div>
             <div className={classes.flexGrow} />
-            <TextField variant="outlined" fullWidth value={window.location + link} inputProps={{readOnly: true}} onClick={() => {setLink(generateLink())}} />
+            <TextField
+              variant="outlined"
+              fullWidth
+              value={window.location + link}
+              inputProps={{ readOnly: true }}
+              onClick={() => {
+                setLink(generateLink());
+              }}
+            />
             <Button
               variant="contained"
               color="primary"
@@ -131,7 +136,11 @@ export default function SaveRequest({ curlState }) {
               disabled={!linkShared}
               onClick={copyLink}
             >
-              {copied ? <span>Copied to clipboard</span> : <span>Copy link</span>}
+              {copied ? (
+                <span>Copied to clipboard</span>
+              ) : (
+                <span>Copy link</span>
+              )}
             </Button>
           </Grid>
           <Hidden smDown>
@@ -140,8 +149,8 @@ export default function SaveRequest({ curlState }) {
                 variant="outlined"
                 multiline
                 rows={20}
-                inputProps={{ readOnly: true,}}
-                style={{ width: "90%"}}
+                inputProps={{ readOnly: true }}
+                style={{ width: "90%" }}
                 value={curlState.result}
               />
             </Grid>
