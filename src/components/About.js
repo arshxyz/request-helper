@@ -66,21 +66,21 @@ export default function About() {
             <Grid container spacing={2} justify="center">
         
         <Grid item xs={12} md={3}>
-            <a href="https://github.com/arshyz"> 
+            <a href="https://github.com/arshxyz" target="_blank" rel="noreferrer"> 
           <div className={classes.aboutSection}>
           <GitHubIcon />
           </div>
           </a>
         </Grid>
         <Grid item xs={12} md={3}>
-            <a href="https://github.com/arshyz"> 
+            <a href="https://www.linkedin.com/in/arsh-kohli-815b1b1b8/" target="_blank" rel="noreferrer"> 
           <div className={classes.aboutSection}>
           <LinkedInIcon />
           </div>
           </a>
         </Grid>
         <Grid item xs={12} md={3}>
-            <a href="https://github.com/arshyz"> 
+            <a href="mailto:spamprotect.arsh.citral@simplelogin.co" target="_blank" rel="noreferrer"> 
           <div className={classes.aboutSection}>
           <EmailIcon />
           </div>
