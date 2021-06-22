@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme) => ({
   submitBtn: {
     marginTop: "1rem",
     [theme.breakpoints.down("md")]: {
-      marginTop: "2rem",
+      marginTop: "0.5rem",
     },
   },
   input: {

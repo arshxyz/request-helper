@@ -5,6 +5,7 @@ import Backdrop from "@material-ui/core/Backdrop";
 import Fade from "@material-ui/core/Fade";
 import SaveRequest from "../SaveRequest";
 import About from "../About";
+import { Button } from "@material-ui/core";
 const useStyles = makeStyles((theme) => ({
   modal: {
     display: "flex",
@@ -17,6 +18,11 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: theme.shadows[5],
     // padding: theme.spacing(2, 2),
   },
+  closeBtnModal:{
+    display: "flex",
+    justifyContent:"center",
+    marginBottom: theme.spacing(2),
+  }
 }));
 
 export default function TransitionsModal({
@@ -46,6 +52,9 @@ export default function TransitionsModal({
         <div className={classes.paper}>
           {modalType === "share" ? <SaveRequest {...{ curlState }} /> : null}
           {modalType === "about" ? <About /> : null}
+      <div className={classes.closeBtnModal}>
+        <Button onClick={handleClose}>Close</Button>
+      </div>
         </div>
       </Fade>
     </Modal>
