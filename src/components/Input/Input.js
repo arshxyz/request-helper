@@ -134,6 +134,7 @@ export const CurlInput = (props) => {
                     onChange: handleInputChange,
                     label: "cURL Syntax",
                     error: syntaxError,
+                    placeholder: "Leave this empty to use a sample cURL request"
                   }}
                   Btns={[dropDown, ConvertBtn]}
                 />
