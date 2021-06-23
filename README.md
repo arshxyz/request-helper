@@ -4,3 +4,4 @@ A simple browser based tool to help devs convert cURL requests to fetch(Node), r
 
 Allows easy sharing with a unique link for each request.
 
+![Image](https://imgur.com/aGUpV4X.gif)
