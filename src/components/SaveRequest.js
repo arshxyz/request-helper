@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
   },
   confirmText: {
     fontSize: "large",
-    // padding: theme.spacing(0, 1, 1, 0),
   },
   content: {
     color: "#6e6e6e",

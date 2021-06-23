@@ -16,7 +16,6 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.background.paper,
     borderRadius: "10px",
     boxShadow: theme.shadows[5],
-    // padding: theme.spacing(2, 2),
   },
   closeBtnModal:{
     display: "flex",

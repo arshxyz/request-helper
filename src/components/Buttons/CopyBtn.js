@@ -8,7 +8,6 @@ export default function CopyBtn({ copyText }) {
       variant="contained"
       color="primary"
       endIcon={<CopyIcon />}
-      //   disabled={!state.result}
       onClick={() => {
         navigator.clipboard.writeText(copyText);
         toast.success("Copied!");

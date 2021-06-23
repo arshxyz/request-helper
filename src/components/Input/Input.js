@@ -28,13 +28,21 @@ export const CurlInput = (props) => {
   const options = Object.keys(curlconvert);
   const classes = useStyles();
   const [state, setState] = useState({
-    curl: "",
+    curl: examplecurl,
     result: "",
     convertTo: "nodefetch",
   });
   const [syntaxError, setSyntaxError] = useState(false);
   const [selectEmpty, setSelectEmpty] = useState(false);
-
+  const textSettings = {
+    readOnly: true,
+    label: `${curlconvert[state.convertTo].title} Syntax`,
+    value: state.result,
+    onChange: (e) => {
+      setState((prevState) => ({ ...prevState, curl: e.target.value }));
+    },
+  };
+  
   const convert = () => {
     if (!state.convertTo) {
       setSelectEmpty(true);
@@ -65,28 +73,7 @@ export const CurlInput = (props) => {
     setState((prevState) => ({ ...prevState, convertTo: value }));
   };
 
-  const textSettings = {
-    readOnly: true,
-    label: `${curlconvert[state.convertTo].title} Syntax`,
-    value: state.result,
-    onChange: (e) => {
-      setState((prevState) => ({ ...prevState, curl: e.target.value }));
-    },
-  };
-  // const CopyBtn = (
-  //   <Button
-  //     variant="contained"
-  //     color="primary"
-  //     endIcon={<CopyIcon />}
-  //     disabled={!state.result}
-  //     onClick={() => {
-  //       navigator.clipboard.writeText(state.result);
-  //       toast.success("Copied!");
-  //     }}
-  //   >
-  //     Copy
-  //   </Button>
-  // );
+
   const ConvertBtn = (
     <Button
       variant="contained"

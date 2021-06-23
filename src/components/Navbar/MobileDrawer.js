@@ -16,10 +16,6 @@ export const MobileDrawer = ({ menuItems, ...drawerOptions }) => {
   const classes = useStyles();
   return (
     <Drawer
-      //   open={drawerOpen}
-      //   onClose={() => {
-      //     setDrawerOpen(false);
-      //   }}
       {...drawerOptions}
       className={classes.fullList}
     >

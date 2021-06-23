@@ -24,7 +24,6 @@ export const DesktopMenuItems = ({ menuItems }) => {
           key={item.title}
           endIcon={item.icon}
           onClick={item.action}
-          // disabled={true}
         >
           {item.title}
         </Button>
